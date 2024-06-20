@@ -10,10 +10,7 @@
 
 @using (Html.BeginForm("CsvUpload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary()
-
-    <input type="file" id="FileUpload1" name="FileUpload1" />
+      <input type="file" id="abhifile" name="abhifile2" />
     <button type="submit">Upload</button>
 }
 
