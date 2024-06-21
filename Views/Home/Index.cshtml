@@ -8,12 +8,12 @@
     <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
 </div>
 
+
 @using (Html.BeginForm("CsvUpload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-      <input type="file" id="abhifile" name="abhifile2" />
+    <input type="file" id="excelFile" name="excelFile" />
     <button type="submit">Upload</button>
 }
-
 <div class="row">
     <div class="col-md-4">
         <h2>Getting started</h2>
