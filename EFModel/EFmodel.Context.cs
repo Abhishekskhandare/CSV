@@ -10,9 +10,14 @@
 namespace CSV.EFModel
 {
     using System;
+    using System.Collections.Generic;
+    using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    
+    using System.Data.SqlClient;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public partial class GiveeEntities : DbContext
     {
         public GiveeEntities()
@@ -26,5 +31,16 @@ namespace CSV.EFModel
         }
     
         public virtual DbSet<user> users { get; set; }
+        public List<user> GetNonExistingUsers(DataTable userTable)
+        {
+            var parameter = new SqlParameter("@UserTable", SqlDbType.Structured)
+            {
+                TypeName = "dbo.UserTableType", // Adjust to match your table type name
+                Value = userTable
+            };
+
+            var result = this.Database.SqlQuery<user>("EXEC GetNonExistingUsers @UserTable", parameter).ToList();
+            return result;
+        }
     }
 }

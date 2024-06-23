@@ -6,11 +6,16 @@ using System.Globalization;
 using System.IO;
 using OfficeOpenXml;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
+using System.Linq;
+using System.Configuration;
 
 namespace CSV.Agent
 {
     public class HomeAgent
     {
+        GiveeEntities giveeEntities = new GiveeEntities();
         public void csvUpload(HttpPostedFileBase excelFile)
         {
             using (var package = new ExcelPackage(excelFile.InputStream))
@@ -19,25 +24,25 @@ namespace CSV.Agent
                 var rowCount = worksheet.Dimension.Rows;
                 var colCount = worksheet.Dimension.Columns;
 
-                List<user> dataList = new List<user>();
+                DataTable userTable = new DataTable();
+                userTable.Columns.Add("userid", typeof(int));
+                userTable.Columns.Add("username", typeof(string));
+                userTable.Columns.Add("email", typeof(string));
+                userTable.Columns.Add("password", typeof(string));
 
                 for (int row = 2; row <= rowCount; row++) // assuming the first row contains headers
                 {
                     var data = new user
                     {
+                        userid = 0,
                         username = worksheet.Cells[row, 1].Value?.ToString().Trim(),
                         email = worksheet.Cells[row, 2].Value?.ToString().Trim(),
                         password = worksheet.Cells[row, 3].Value?.ToString().Trim()
-                        //Property2 = int.Parse(worksheet.Cells[row, 2].Value?.ToString().Trim())
                     };
-                    dataList.Add(data);
+                    userTable.Rows.Add(data.userid , data.username , data.email , data.password);
                 }
+                var users  = giveeEntities.GetNonExistingUsers(userTable);
 
-                // Process the data or save to the database
-                foreach (var record in dataList)
-                {
-                    // Perform your database operations here
-                }
             }
         }
     }
