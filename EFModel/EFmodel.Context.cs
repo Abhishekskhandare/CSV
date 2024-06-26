@@ -42,5 +42,6 @@ namespace CSV.EFModel
             var result = this.Database.SqlQuery<user>("EXEC GetNonExistingUsers @UserTable", parameter).ToList();
             return result;
         }
+          public Database GetDatabase() => base.Database;
     }
 }

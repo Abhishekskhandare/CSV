@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Linq;
 using System.Configuration;
+using CSV.Repository;
 
 namespace CSV.Agent
 {
@@ -41,7 +42,13 @@ namespace CSV.Agent
                     };
                     userTable.Rows.Add(data.userid , data.username , data.email , data.password);
                 }
-                var users  = giveeEntities.GetNonExistingUsers(userTable);
+                //old method 
+                //var users  = giveeEntities.GetNonExistingUsers(userTable);
+
+                IUCNViewRepository<user> objStoredProc = new UCNViewRepository<user>();
+                objStoredProc.SetParameter("@UserTable" , userTable , ParameterDirection.Input , SqlDbType.Structured, "dbo.UserTableType");
+                var users2 = objStoredProc.ExecuteStoredProcedureList("EXEC GetNonExistingUsers @UserTable", 0, null, out int totalRowCount);
+
 
             }
         }
